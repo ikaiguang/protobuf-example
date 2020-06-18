@@ -24,14 +24,43 @@ Protobuf相对于JSON和XML具有以下优点：
 
 > go install github.com/golang/protobuf/protoc-gen-go
 
-## 编译生成各门编程语言使用的数据访问类
-
 ```shell script
 
 # 编译生成go语言使用的数据访问类
 protoc -I. -I%GOPATH%/src --go_opt=paths=source_relative --go_out=. ./go/proto/*.proto
 
-# 编译生成c++语言使用的数据访问类
-protoc -I. -I%GOPATH%/src --cpp_out=. ./cpp/proto/*.proto
+```
+
+## 编译生成js语言使用的数据访问类
+
+> ./js/exports.js
+
+```js
+
+let hwProto = require('./proto/hw_pb.js');
+
+module.exports = {
+    DataProto: hwProto
+}
+
+```
+
+```shell script
+
+# 编译生成js语言使用的数据访问类
+protoc -I. -I%GOPATH%/src --js_out=import_style=commonjs:. ./js/proto/*.proto
+#protoc -I. -I%GOPATH%/src --js_out=import_style=commonjs,binary:. ./js/proto/*.proto
+
+# 安装库文件的引用库
+npm install -g require
+
+# 安装打包成前端使用的js文件
+npm install -g browserify
+
+# 安装protobuf的库文件
+npm install google-protobuf
+
+# 打包js文件exports.js
+browserify ./js/exports.js -o ./js/dist/hw.js
 
 ```

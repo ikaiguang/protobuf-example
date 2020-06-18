@@ -1,5 +1,12 @@
 .idea
 .vscode
 
+# depend
+node_modules
+js/node_modules
+
 # test
 test.go
+
+# exe
+*.exe

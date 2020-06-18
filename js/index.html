@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>protobuf</title>
+    <script src="dist/axios.min.js"></script>
+    <script src="dist/hw.js"></script>
+</head>
+<body>
+
+<h1>js 使用 protobuf</h1>
+
+{{/* josn */}}
+<h3 style="color:blue">content-type = application/json</h3>
+<div id="json_div"></div>
+<div>
+    响应结果size :
+    <span style="color:blue" id="json_length"></span>
+</div>
+<pre id="json_text"></pre>
+<pre id="json_resp"></pre>
+
+{{/* protobuf */}}
+<h3 style="color:blue">content-type = application/x-protobuf</h3>
+<div id="pb_div"></div>
+<div>
+    响应结果size :
+    <span style="color:blue" id="pb_length"></span>
+</div>
+<pre id="pb_text"></pre>
+<pre id="pb_resp"></pre>
+
+
+<script type="text/javascript">
+    // json
+    let jsonDivDom = document.getElementById("json_div")
+    let jsonTextDom = document.getElementById("json_text")
+    let jsonLengthDom = document.getElementById("json_length")
+    let jsonRespDom = document.getElementById("json_resp")
+
+    // protobuf
+    let pbDivDom = document.getElementById("pb_div")
+    let pbTextDom = document.getElementById("pb_text")
+    let pbLengthDom = document.getElementById("pb_length")
+    let pbRespDom = document.getElementById("pb_resp")
+
+    // req
+    let helloReq = new proto.pb.hello_req()
+    helloReq.setName("Js")
+
+    // json
+    axios.defaults.headers.post['Content-Type'] = 'application/json';
+    axios.post("/say_hello", helloReq.toObject()).then(function (response) {
+        // response info
+        let divContent = "content-type : " + response.headers["content-type"]
+        divContent += ""
+        jsonDivDom.innerHTML = divContent
+
+        // response
+        let dataJSON = JSON.stringify(response.data)
+
+        // dom
+        jsonLengthDom.innerHTML = dataJSON.length.toString()
+        jsonTextDom.innerHTML = dataJSON
+        jsonRespDom.innerHTML = JSON.stringify(response.data.data)
+    }).catch(function (error) {
+        // request fail
+        let divContent = "request fail"
+        divContent += ""
+        jsonDivDom.innerHTML = divContent
+    });
+
+    // binary
+    // typeof response.data = string
+    axios.defaults.headers.post['Content-Type'] = 'application/x-protobuf';
+    // options are: 'arraybuffer', 'document', 'json', 'text', 'stream'
+    axios.defaults.responseType = 'arraybuffer'
+    axios.post("/say_hello", helloReq.serializeBinary()).then(function (response) {
+        // response info
+        let divContent = "content-type : " + response.headers["content-type"]
+        pbDivDom.innerHTML = divContent
+
+        // response
+        let resp = proto.pb.response.deserializeBinary(response.data)
+        let helloResp = new proto.pb.hello_resp()
+        if (resp.hasData()) {
+            helloResp = proto.pb.hello_resp.deserializeBinary(resp.getData().getValue())
+        }
+
+        // dom
+        // pbLengthDom.innerHTML = response.data.length
+        pbLengthDom.innerHTML = response.data.byteLength
+        pbTextDom.innerHTML = resp.toString()
+        pbRespDom.innerHTML = JSON.stringify(helloResp.toObject())
+    }).catch(function (error) {
+        // request fail
+        let divContent = "request fail"
+        divContent += ""
+        pbDivDom.innerHTML = divContent
+    });
+</script>
+
+</body>
+</html>

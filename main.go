@@ -13,7 +13,16 @@ func main() {
 	engine := gin.New()
 	engine.Use(gin.Recovery())
 
-	// route
+	// html
+	engine.LoadHTMLFiles("./js/index.html")
+	engine.StaticFile("/favicon.ico", "./js/favicon.ico")
+	engine.StaticFS("/dist", http.Dir("./js/dist"))
+	//engine.StaticFS("/js", gin.Dir("./js", true))
+	engine.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", gin.H{})
+	})
+
+	// api
 	engine.Handle(http.MethodPost, goserver.SayHelloPath, goserver.SayHello)
 
 	// run
