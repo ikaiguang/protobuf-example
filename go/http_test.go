@@ -16,7 +16,7 @@ import (
 
 func TestSayHello_Pb(t *testing.T) {
 	// requset name
-	var name = "ZhangSan"
+	var name = "Go"
 	helloReq := &pb.HelloReq{Name: name}
 	helloReqBytes, err := proto.Marshal(helloReq)
 	if err != nil {
@@ -95,7 +95,7 @@ func TestSayHello_Pb(t *testing.T) {
 
 func TestSayHello_JOSN(t *testing.T) {
 	// requset name
-	var name = "ZhangSan"
+	var name = "Go"
 	httpReader := strings.NewReader(`{"name":"` + name + `"}`)
 	t.Log("json request size : ", httpReader.Size())
 

@@ -1,5 +1,15 @@
 # Protobuf
 
+run demo
+
+```shell script
+
+go run main.go
+# js -> browser open : 127.0.0.1:51002
+# go -> go test -v ./go
+
+```
+
 Protobuf是一种用于序列化结构化数据的灵活，高效，自动化的机制。
 能够将结构化数据序列化,可用于数据存储，通信协议等方面。
 您甚至可以更新数据结构，而不会破坏已针对“旧”格式编译的已部署程序。
@@ -40,7 +50,7 @@ protoc -I. -I%GOPATH%/src --go_opt=paths=source_relative --go_out=. ./go/proto/*
 let hwProto = require('./proto/hw_pb.js');
 
 module.exports = {
-    DataProto: hwProto
+    HwProto: hwProto,
 }
 
 ```
