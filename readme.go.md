@@ -12,6 +12,6 @@ go run main.go
 
 # 编译运行
 go build -o main.exe main.go
-server.exe
+main.exe
 
 ```
